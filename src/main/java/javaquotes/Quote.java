@@ -4,10 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Quote {
-    List<String > tags = new ArrayList < String> ();
+    List<String > tags = new ArrayList<> ();
     private String author;
     private String likes;
     private String text;
+
+    //constructor
+    public  Quote(String author,String likes,String txt){
+        this.author = author;
+        this.likes=likes;
+        this.text=txt;
+    }
 
     // Getter Methods
 

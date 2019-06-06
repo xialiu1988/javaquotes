@@ -3,12 +3,52 @@
  */
 package javaquotes;
 
+import com.google.common.collect.Iterables;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import org.checkerframework.checker.units.qual.C;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+
+        Gson gson = new Gson();
+        //read json file
+        try{
+            String filepath = "src/main/java/javaquotes/recentquotes.json";
+            BufferedReader br = new BufferedReader(new FileReader(filepath));
+            //https://stackoverflow.com/questions/34486503/read-a-json-file-with-gson-library,becuase json file start with "[" instead of"{"
+            Type type = new TypeToken<List<Quote>>(){}.getType();
+            List<Quote> quotes = gson.fromJson(br,type);
+            //go through the file created Quota class
+            //print out the random popular book quotes
+            //generate random index number
+            Random randomNum = new Random();
+            int sizeofList = quotes.size();
+            int idx = randomNum.nextInt(sizeofList);
+            //change list to array--https://www.techiedelight.com/convert-list-to-array-java/
+            Quote[] arr = Iterables.toArray(quotes,Quote.class);
+            System.out.println("Author: "+arr[idx].getAuthor());
+            System.out.println("Text: "+arr[idx].getText());
+
+
+        }catch (IOException e){
+            System.out.println(e);
+        }
+
     }
+
+
+
+
+
 }
