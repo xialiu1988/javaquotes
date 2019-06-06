@@ -44,7 +44,6 @@ public class App {
             Type type = new TypeToken<List<Quote>>(){}.getType();
             List<Quote> quotes = gson.fromJson(br,type);
             //go through the file created Quota class
-            //print out the random popular book quotes
             //generate random index number
             Random randomNum = new Random();
             int sizeofList = quotes.size();
