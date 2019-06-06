@@ -3,12 +3,23 @@
  */
 package javaquotes;
 
+import com.google.gson.Gson;
+import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
 
 public class AppTest {
-    @Test public void testAppHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+    @Test
+    public void canGetRandomAuthorAndTextFromJson(){
+
+        String filepath = "src/test/resources/test.json";
+        String[] testLists = App.getResults(filepath);
+        Assert.assertEquals(2, testLists.length);
+        Assert.assertTrue("first position stores the author",testLists[0].contains("Author"));
+        Assert.assertTrue("second position stores the text",testLists[1].contains("Text"));
     }
 }
