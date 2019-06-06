@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -21,10 +22,23 @@ public class App {
 
     public static void main(String[] args) {
 
+
+        String filepath = "src/main/resources/recentquotes.json";
+
+        String[] res = getResults(filepath);
+
+        for(String e : res){
+            System.out.println(e);
+        }
+    }
+
+    public  static String[] getResults(String filepath){
+
+        String[] result = new String[2];
         Gson gson = new Gson();
         //read json file
         try{
-            String filepath = "src/main/java/javaquotes/recentquotes.json";
+
             BufferedReader br = new BufferedReader(new FileReader(filepath));
             //https://stackoverflow.com/questions/34486503/read-a-json-file-with-gson-library,becuase json file start with "[" instead of"{"
             Type type = new TypeToken<List<Quote>>(){}.getType();
@@ -37,17 +51,17 @@ public class App {
             int idx = randomNum.nextInt(sizeofList);
             //change list to array--https://www.techiedelight.com/convert-list-to-array-java/
             Quote[] arr = Iterables.toArray(quotes,Quote.class);
-            System.out.println("Author: "+arr[idx].getAuthor());
-            System.out.println("Text: "+arr[idx].getText());
 
+            result[0]=("Author: "+arr[idx].getAuthor());
+            result[1]=("Text: "+arr[idx].getText());
 
         }catch (IOException e){
             System.out.println(e);
         }
 
+
+return result;
     }
-
-
 
 
 
