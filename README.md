@@ -9,13 +9,21 @@ This repo includes two main classes:
 
 App: main()
 
-     getResults(): pass in a filepath and return the result user want which includes author and text
-     
+     getResults(): get back from api if internet is ok otherwise get quote from file
+     getQuoteFromFile():  a helper function to getn a random quote from file
+
 Quote: tags;
        author;
        likes;
        text;
        
+
+
+QuoteApi: quoteAuthor
+          quoteText
+
+
+
 
 Examples:
 
@@ -35,3 +43,6 @@ Tests:
 QuoteTest: including all tests for getters and setters
 
 AppTest: test the getResults() in the app 
+         test the getQuoteFromFile() in the app class
+
+QuoteApiTest: test all the getters.

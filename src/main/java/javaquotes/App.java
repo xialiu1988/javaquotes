@@ -6,6 +6,7 @@ package javaquotes;
 import com.google.common.collect.Iterables;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.checkerframework.checker.units.qual.C;
 
 import java.io.*;
@@ -35,8 +36,21 @@ public class App {
             BufferedReader br = new BufferedReader(new InputStreamReader((con.getInputStream())));
             QuoteApi quote = gson.fromJson(br,QuoteApi.class);
             randomQutoe=quote.getText();
-//            System.out.println(quote.getText());
+
+            Quote newQuote = new Quote(quote.getAuthor(), quote.getText());
             //write to file
+
+            BufferedReader brr = new BufferedReader(new FileReader("src/main/resources/recentquotes.json"));
+            Type type = new TypeToken<List<Quote>>() {
+                }.getType();
+            List<Quote> quotes = gson.fromJson(brr, type);
+            System.out.println(quotes.size());
+            quotes.add(newQuote);
+            System.out.println(quotes.size());
+            String jsonString = gson.toJson(quotes);
+            FileWriter fileWriter = new FileWriter("src/main/resources/recentquotes.json");
+            fileWriter.write(jsonString);
+            fileWriter.close();
 
         }catch (IOException e){
             System.out.println(e);
@@ -48,7 +62,7 @@ public class App {
       return randomQutoe;
     }
 
-
+   //get a random quote from the json file localy
     public  static String getQuoteFromFile(String filepath){
         Gson gson = new Gson();
         String qq = "";
