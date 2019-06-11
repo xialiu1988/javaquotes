@@ -16,6 +16,12 @@ public class Quote {
         this.text=txt;
     }
 
+    //constructor
+    public Quote(String author,String txt){
+        this.author = author;
+        this.text=txt;
+    }
+
     // Getter Methods
 
     public String getAuthor() {

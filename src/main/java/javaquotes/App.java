@@ -6,13 +6,13 @@ package javaquotes;
 import com.google.common.collect.Iterables;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.checkerframework.checker.units.qual.C;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,47 +21,75 @@ import java.util.Scanner;
 public class App {
 
     public static void main(String[] args) {
-
-
-        String filepath = "src/main/resources/recentquotes.json";
-
-        String[] res = getResults(filepath);
-
-        for(String e : res){
-            System.out.println(e);
-        }
+      String ss = getResults();
+     System.out.println(ss);
     }
 
-    public  static String[] getResults(String filepath){
+    public  static String getResults(){
 
-        String[] result = new String[2];
         Gson gson = new Gson();
-        //read json file
+        String randomQutoe="";
         try{
 
-            BufferedReader br = new BufferedReader(new FileReader(filepath));
-            //https://stackoverflow.com/questions/34486503/read-a-json-file-with-gson-library,becuase json file start with "[" instead of"{"
-            Type type = new TypeToken<List<Quote>>(){}.getType();
-            List<Quote> quotes = gson.fromJson(br,type);
-            //go through the file created Quota class
-            //generate random index number
-            Random randomNum = new Random();
-            int sizeofList = quotes.size();
-            int idx = randomNum.nextInt(sizeofList);
-            //change list to array--https://www.techiedelight.com/convert-list-to-array-java/
-            Quote[] arr = Iterables.toArray(quotes,Quote.class);
+            URL url = new URL("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            BufferedReader br = new BufferedReader(new InputStreamReader((con.getInputStream())));
+            QuoteApi quote = gson.fromJson(br,QuoteApi.class);
+            randomQutoe=quote.getText();
 
-            result[0]=("Author: "+arr[idx].getAuthor());
-            result[1]=("Text: "+arr[idx].getText());
+            Quote newQuote = new Quote(quote.getAuthor(), quote.getText());
+            //write to file
+
+            List<Quote> quotes = readFromFile();
+            System.out.println(quotes.size());
+            quotes.add(newQuote);
+            System.out.println(quotes.size());
+            String jsonString = gson.toJson(quotes);
+            FileWriter fileWriter = new FileWriter("src/main/resources/recentquotes.json");
+            fileWriter.write(jsonString);
+            fileWriter.close();
 
         }catch (IOException e){
             System.out.println(e);
+            //read from json file
+             String filepath = "src/main/resources/recentquotes.json";
+             String res = getQuoteFromFile(filepath);
+             randomQutoe = res;
         }
+      return randomQutoe;
+    }
 
+   //get a random quote from the json file localy
+    public  static String getQuoteFromFile(String filepath){
+            Gson gson = new Gson();
+            String qq = "";
 
-return result;
+            List<Quote> quotes = readFromFile();
+//go through the file created Quota class
+//generate random index number
+            Random randomNum = new Random();
+            int sizeofList = quotes.size();
+            int idx = randomNum.nextInt(sizeofList);
+//change list to array--https://www.techiedelight.com/convert-list-to-array-java/
+            Quote[] arr = Iterables.toArray(quotes, Quote.class);
+            qq=arr[idx].getAuthor()+":"+arr[idx].getText();
+            return qq;
     }
 
 
-
+    //read file and return list of quotes
+    public static List<Quote> readFromFile() {
+        Gson gson = new Gson();
+        List<Quote> quotes = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("src/main/resources/recentquotes.json"));
+//https://stackoverflow.com/questions/34486503/read-a-json-file-with-gson-library,becuase json file start with "[" instead of"{"
+            Type type = new TypeToken<List<Quote>>() {
+            }.getType();
+            quotes = gson.fromJson(br, type);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+         return quotes;
+    }
 }
