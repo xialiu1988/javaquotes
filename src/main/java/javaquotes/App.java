@@ -40,10 +40,7 @@ public class App {
             Quote newQuote = new Quote(quote.getAuthor(), quote.getText());
             //write to file
 
-            BufferedReader brr = new BufferedReader(new FileReader("src/main/resources/recentquotes.json"));
-            Type type = new TypeToken<List<Quote>>() {
-                }.getType();
-            List<Quote> quotes = gson.fromJson(brr, type);
+            List<Quote> quotes = readFromFile();
             System.out.println(quotes.size());
             quotes.add(newQuote);
             System.out.println(quotes.size());
@@ -64,14 +61,10 @@ public class App {
 
    //get a random quote from the json file localy
     public  static String getQuoteFromFile(String filepath){
-        Gson gson = new Gson();
-        String qq = "";
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filepath));
-//https://stackoverflow.com/questions/34486503/read-a-json-file-with-gson-library,becuase json file start with "[" instead of"{"
-            Type type = new TypeToken<List<Quote>>() {
-            }.getType();
-            List<Quote> quotes = gson.fromJson(br, type);
+            Gson gson = new Gson();
+            String qq = "";
+
+            List<Quote> quotes = readFromFile();
 //go through the file created Quota class
 //generate random index number
             Random randomNum = new Random();
@@ -80,12 +73,23 @@ public class App {
 //change list to array--https://www.techiedelight.com/convert-list-to-array-java/
             Quote[] arr = Iterables.toArray(quotes, Quote.class);
             qq=arr[idx].getAuthor()+":"+arr[idx].getText();
-        }
-        catch (IOException e){
-            System.out.println(e);
-        }
-        return qq;
+            return qq;
     }
 
 
+    //read file and return list of quotes
+    public static List<Quote> readFromFile() {
+        Gson gson = new Gson();
+        List<Quote> quotes = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("src/main/resources/recentquotes.json"));
+//https://stackoverflow.com/questions/34486503/read-a-json-file-with-gson-library,becuase json file start with "[" instead of"{"
+            Type type = new TypeToken<List<Quote>>() {
+            }.getType();
+            quotes = gson.fromJson(br, type);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+         return quotes;
+    }
 }
