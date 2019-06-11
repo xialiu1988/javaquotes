@@ -39,18 +39,18 @@ public class App {
 
             Quote newQuote = new Quote(quote.getAuthor(), quote.getText());
             //write to file
-
             List<Quote> quotes = readFromFile();
-            System.out.println(quotes.size());
-            quotes.add(newQuote);
-            System.out.println(quotes.size());
-            String jsonString = gson.toJson(quotes);
-            FileWriter fileWriter = new FileWriter("src/main/resources/recentquotes.json");
-            fileWriter.write(jsonString);
-            fileWriter.close();
+            //check if the newQuote already exsits in the file
+            if(!quotes.contains(newQuote)) {
+                quotes.add(newQuote);
+                String jsonString = gson.toJson(quotes);
+                FileWriter fileWriter = new FileWriter("src/main/resources/recentquotes.json");
+                fileWriter.write(jsonString);
+                fileWriter.close();
+            }
 
         }catch (IOException e){
-            System.out.println(e);
+            System.out.println("Looks like you don't have internet now.See what we got from the Json file");
             //read from json file
              String filepath = "src/main/resources/recentquotes.json";
              String res = getQuoteFromFile(filepath);
