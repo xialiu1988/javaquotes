@@ -44,5 +44,6 @@ QuoteTest: including all tests for getters and setters
 
 AppTest: test the getResults() in the app 
          test the getQuoteFromFile() in the app class
-
+         test the readFromFile()
+      
 QuoteApiTest: test all the getters.
